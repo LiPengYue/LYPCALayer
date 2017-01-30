@@ -19,6 +19,7 @@
 /**
  *isCut     是否裁切,默认为NO；
  *radius    半径
+ *image     view中的image内容
  */
 - (instancetype) initWithIsCut: (BOOL) isCut andCutRadius: (CGFloat)radius andImage: (UIImage *)image;
 

@@ -16,12 +16,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-     RoundView*view = [[RoundView alloc]initWithIsCut:YES andCutRadius:0 andImage:nil];
-    view.frame = CGRectMake(100, 100, 100, 100);
-    view.backgroundColor = [UIColor redColor];
-    
-    
-    UIImage *image = [UIImage imageNamed:@"2.2"];
+     RoundView*view = [[RoundView alloc]initWithIsCut:YES andCutRadius:30 andImage:nil];
+    view.frame = CGRectMake(100, 100, 100, 110);
+    UIImage *image = [UIImage imageNamed:@"1.1"];
     view.image = image;
     
     [self.view addSubview:view];

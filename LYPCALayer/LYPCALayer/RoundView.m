@@ -12,6 +12,12 @@
 @end
 
 @implementation RoundView
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        self.backgroundColor = [UIColor clearColor];
+    }
+    return self;
+}
 
 //实例化方法
 + (instancetype) roundViewWithIsCut: (BOOL) isCut andCutRadius: (CGFloat)radius andImage: (UIImage *)image{
@@ -46,6 +52,7 @@
     if (!self.isCut) return;//如果不裁切，就返回
     //裁切
     CGContextRef context = UIGraphicsGetCurrentContext();
+    
     if (!self.radius) {//如果没有设置裁切半径，那么就默认为圆形
         self.radius = rect.size.width > rect.size.height ?
         rect.size.width / 2 :
@@ -72,7 +79,6 @@
     CGContextClosePath(context);
     //裁切
     CGContextClip(context);
-    CGContextFillPath(context);
    //CGContextDrawImage(context, rect, self.image.CGImage);
     
     [_image drawInRect:rect];
@@ -94,8 +100,5 @@
     _image = image;
     [self setNeedsDisplay];
 }
-
-
-
 
 @end
