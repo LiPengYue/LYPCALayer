@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-
+#import "RoundView.h"
 @interface ViewController ()
 
 @end
@@ -16,7 +16,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+     RoundView*view = [[RoundView alloc]initWithIsCut:YES andCutRadius:0 andImage:nil];
+    view.frame = CGRectMake(100, 100, 100, 100);
+    view.backgroundColor = [UIColor redColor];
+    
+    
+    UIImage *image = [UIImage imageNamed:@"2.2"];
+    view.image = image;
+    
+    [self.view addSubview:view];
+    [view setNeedsDisplay];
+
 }
 
 

@@ -13,6 +13,8 @@
 		869F001E1E3F752D0099305C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 869F001C1E3F752D0099305C /* Main.storyboard */; };
 		869F00201E3F752D0099305C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 869F001F1E3F752D0099305C /* Assets.xcassets */; };
 		869F00231E3F752D0099305C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 869F00211E3F752D0099305C /* LaunchScreen.storyboard */; };
+		869F002F1E3F7DA90099305C /* RoundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 869F002E1E3F7DA90099305C /* RoundView.m */; };
+		86ADD8711E3F8DFF00C2E85E /* LYPRoundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 86ADD8701E3F8DFF00C2E85E /* LYPRoundView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,10 @@
 		869F001F1E3F752D0099305C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		869F00221E3F752D0099305C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		869F00241E3F752D0099305C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		869F002D1E3F7DA90099305C /* RoundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoundView.h; sourceTree = "<group>"; };
+		869F002E1E3F7DA90099305C /* RoundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoundView.m; sourceTree = "<group>"; };
+		86ADD86F1E3F8DFF00C2E85E /* LYPRoundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYPRoundView.h; sourceTree = "<group>"; };
+		86ADD8701E3F8DFF00C2E85E /* LYPRoundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYPRoundView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +68,10 @@
 				869F00171E3F752D0099305C /* AppDelegate.m */,
 				869F00191E3F752D0099305C /* ViewController.h */,
 				869F001A1E3F752D0099305C /* ViewController.m */,
+				869F002D1E3F7DA90099305C /* RoundView.h */,
+				869F002E1E3F7DA90099305C /* RoundView.m */,
+				86ADD86F1E3F8DFF00C2E85E /* LYPRoundView.h */,
+				86ADD8701E3F8DFF00C2E85E /* LYPRoundView.m */,
 				869F001C1E3F752D0099305C /* Main.storyboard */,
 				869F001F1E3F752D0099305C /* Assets.xcassets */,
 				869F00211E3F752D0099305C /* LaunchScreen.storyboard */,
@@ -150,8 +160,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				869F002F1E3F7DA90099305C /* RoundView.m in Sources */,
 				869F001B1E3F752D0099305C /* ViewController.m in Sources */,
 				869F00181E3F752D0099305C /* AppDelegate.m in Sources */,
+				86ADD8711E3F8DFF00C2E85E /* LYPRoundView.m in Sources */,
 				869F00151E3F752D0099305C /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -271,6 +283,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = LYPCALayer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = yuelipen.LYPCALayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -282,6 +295,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = LYPCALayer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = yuelipen.LYPCALayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -307,6 +321,7 @@
 				869F00291E3F752D0099305C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
