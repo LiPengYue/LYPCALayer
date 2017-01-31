@@ -1,8 +1,5 @@
-# LYPCALayer
-关于CALayer的学习
-![Uploading 2017年总结动画_437483.gif . . .]
-
-![2017年总结动画.gif](http://upload-images.jianshu.io/upload_images/4185621-43df752431272c88.gif?imageMogr2/auto-orient/strip)
+>
+![2017总结的动画demo.gif](http://upload-images.jianshu.io/upload_images/4185621-736e9b4b7e18c09e.gif?imageMogr2/auto-orient/strip)
 
 首先介绍这里面一共有两个比较重要的类
 
@@ -212,5 +209,3 @@ static id _instancetype;
 对于[(Runloop的学习总结请看这里)]()
 
 [好了暂时就这么多了，一切请看github源码](https://github.com/LiPengYue/LYPCALayer)
-
-
