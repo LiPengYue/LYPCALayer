@@ -12,10 +12,14 @@
 #import "DrawRectView.h"//ViewController的底色类
 
 @interface ViewController ()
-@property (nonatomic,weak) RoundView *roundView;
-@property (nonatomic,strong) CADisplayLink *displayLink;
-@property (nonatomic,assign) BOOL isLittle;
+
+@property (nonatomic,weak) RoundView *roundView;//截图的view
+@property (nonatomic,strong) CADisplayLink *displayLink;//计时器
+@property (nonatomic,assign) BOOL isLittle;//是否小于0.3或者大于0.7
+@property (nonatomic,strong) UIImageView *cutImageView;//显示截图的image
+
 @end
+
 
 @implementation ViewController
 
@@ -26,7 +30,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [self setupSubView];
+}
+
+- (void)setupSubView {
     //创建RoundView
     RoundView*view = [[RoundView alloc]initWithIsCut:YES andCutRadius:30 andImage:nil];
     view.frame = CGRectMake(30, 100, 300, 310);
@@ -44,19 +51,28 @@
     
     //设置切割的范围
     [view imageChengeLeftTopRadiu:100 andLeftBottomRadiu:50 andRightTopRadiu:23 andRightBottomRadiu:150 andCutRect:CGRectMake(0, 0, 300, 300) andImageAlpha:.8];
+    
+    //添加截图View
+    self.cutImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 100, 100)];
+    [self.view addSubview: self.cutImageView];
+    
+    //2017新年快乐~
+    UILabel *happyNewYearlable = [[UILabel alloc]init];
+    happyNewYearlable.text = @"2017新年快乐~";
+    happyNewYearlable.font = [UIFont systemFontOfSize:25];
+    happyNewYearlable.textColor = [UIColor redColor];
+    happyNewYearlable.alpha = .8;
+    happyNewYearlable.frame = CGRectMake(self.view.frame.size.width - 200, self.view.frame.size.height - 100, 250, 50);
+    [self.view addSubview:happyNewYearlable];
+    
 }
 
-//MARK: - 点击屏幕截图并且开始动画
 
+//MARK: - 点击屏幕截图并且开始动画
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    //额只是为了使用到懒加载
     self.displayLink;
-    
-    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 100, 100)];
-    imageView.backgroundColor = [UIColor colorWithWhite:1 alpha:0];
-    
-    imageView.image = [self.roundView snapshotImage];
-    
-    [self.view addSubview: imageView];
+    self.cutImageView.image = [self.roundView snapshotImage];
 }
 
 
