@@ -17,8 +17,11 @@
  * isGestureRecognizerStateEnded： 手势是否结束
  * pinch：           手势对象
  */
-#pragma mark - pinch捏合手势
-+ (void)pinchWithView: (UIView *)view andPinchBlock: (void(^)(BOOL isGestureRecognizerStateEnded,UIPinchGestureRecognizer *pinch))pinchiBlock;
++ (void)pinchWithView: (UIView *)view
+        andPinchBlock: (void(^)
+                        (BOOL isGestureRecognizerStateEnded,
+                         UIPinchGestureRecognizer *pinch)
+                        )pinchiBlock;
 
 /**
  * 传入view，给View，添加点击手势
