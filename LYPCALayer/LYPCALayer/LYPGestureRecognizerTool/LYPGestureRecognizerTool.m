@@ -19,18 +19,21 @@
 @property (nonatomic,copy) void(^longPressBlock)();
 //rotation（旋转手势）回调的block
 @property (nonatomic,copy) void(^rotationBlock)(CGFloat rotation,UIRotationGestureRecognizer *rotationGesture);
+//swipe (清扫手势) 回调的block
 @property (nonatomic,copy) void(^swipeBlock)(UISwipeGestureRecognizer *swipe);
 @end
 
 
 
 @implementation LYPGestureRecognizerTool
+
 #pragma mark - 单利对象
-static id _instancetype;
+static LYPGestureRecognizerTool *_instancetype;
 + (instancetype) sharedGestureRecognizerTool {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _instancetype = [[self alloc]init];
+        _instancetype.isSupportMoreGesture = YES;
     });
     return _instancetype;
 }
@@ -77,7 +80,6 @@ static id _instancetype;
         self.pinchBlock(pinch.state,pinch);
         return;
     }
-
     
     //1.获取手指的 缩放的大小
     CGFloat scale = pinch.scale;
@@ -88,7 +90,7 @@ static id _instancetype;
     //2.形变
     pinch.view.transform = CGAffineTransformScale(pinch.view.transform, scale, scale);
     
-    NSLog(@"------------");
+    //NSLog(@"------------");
 }
 
 
@@ -101,6 +103,7 @@ static id _instancetype;
     gestureTool.panBlock = panBlock;
     [view addGestureRecognizer:pan];
 }
+//拖动事件的相应事件
 - (void)pan: (UIPanGestureRecognizer *)pan {
     //视图前置操作
     [pan.view.superview bringSubviewToFront:pan.view];
@@ -119,7 +122,7 @@ static id _instancetype;
     pan.view.center = CGPointMake(center.x + translation.x, center.y + translation.y);
       
     CGPoint velocity = [pan velocityInView:window];
-    NSLog(@"------%@",[NSValue valueWithCGPoint:velocity]);
+    //NSLog(@"------%@",[NSValue valueWithCGPoint:velocity]);
     
     //重设偏移量
     [pan setTranslation:CGPointZero inView:window];
@@ -169,11 +172,12 @@ static id _instancetype;
     //2.形变
     rotationGestrue.view.transform = CGAffineTransformRotate(rotationGestrue.view.transform, angle);
 
-    NSLog(@"=====%f",rotationGestrue.rotation);
-    NSLog(@"=====------%f",rotationGestrue.velocity);
+    //NSLog(@"=====%f",rotationGestrue.rotation);
+    //NSLog(@"=====------%f",rotationGestrue.velocity);
   
 }
 
+#pragma mark - 清扫手势
 + (void)swipeWithView: (UIView *)view andSwipeGrestureDirection: (UISwipeGestureRecognizerDirection)direction andSwipeBlock: (void(^)(UISwipeGestureRecognizer *swipe))swipeBlock{
    
     LYPGestureRecognizerTool *gestureTool = [self sharedGestureRecognizerTool];
@@ -225,7 +229,7 @@ static id _instancetype;
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
 shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    return YES;
+    return self.isSupportMoreGesture;
 }
 
 @end

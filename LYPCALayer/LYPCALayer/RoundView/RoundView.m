@@ -21,10 +21,10 @@
 }
 
 //MARK: - 实例化方法
-+ (instancetype) roundViewWithIsCut: (BOOL)isCut andCutRadius: (CGFloat)radius andImage: (UIImage *)image{
++ (instancetype) roundViewWithIsCut: (BOOL)isCut andCutRadius:(CGFloat)radius andImage:(UIImage *)image{
     return [[self alloc]initWithIsCut:isCut andCutRadius:radius andImage:image];
 }
-- (instancetype) initWithIsCut: (BOOL)isCut andCutRadius: (CGFloat)radius andImage: (UIImage *)image {
+- (instancetype) initWithIsCut: (BOOL)isCut andCutRadius:(CGFloat)radius andImage: (UIImage *)image {
     if (self = [super init]) {
         //先走这句话，是因为现在的isCut是NO，不会切圆，如果先设置isCut那么radius是nil那么就会使View被切成圆形
         self.radius = radius;
@@ -34,22 +34,78 @@
     return self;
 }
 
-//MARK: - 截图并且返回图片
-- (UIImage *)snapshotImage {
+#pragma mark  - 截图并且返回图片
+- (UIImage *)snapshotImageWithImageIsTransparent:(BOOL)isTransparent
+                                    andBlendMode: (CGBlendMode)blendMode
+                                 andSnapshotRect:(CGRect)snapshotRect
+                                   andImageAlpha:(CGFloat)imageAlpha{
     
-    UIGraphicsBeginImageContextWithOptions(self.bounds.size, YES, 0);
+    //MARK: - 默认值设置
+    //切图值设置
+    if (!snapshotRect.size.width || !snapshotRect.size.height) snapshotRect = self.bounds;
+    //图片透明度设置
+    if (imageAlpha <= 1) imageAlpha = self.alpha;
+
     
+    //MARK: - 正式开始截图
+    /**
+     *下面方法，
+     * 第一个参数表示区域大小。
+     * 第二个参数表示裁切掉的部分是否是非透明的。如果需要显示半透明效果，需要传NO，否则传YES。
+     * 第三个参数就是屏幕密度了
+     */
+    UIGraphicsBeginImageContextWithOptions(self.bounds.size,
+                                           isTransparent,
+                                           [UIScreen mainScreen].scale);
+    
+    //获取Context
     CGContextRef context =UIGraphicsGetCurrentContext();
     
+    //搭建裁切路径
     [self contextRefWithcontext:context];
+
     
-    [_image drawInRect:self.bounds blendMode:kCGBlendModeLighten alpha:self.alpha];
+    [_image drawInRect:snapshotRect blendMode:kCGBlendModeNormal alpha:imageAlpha];
     
     UIImage *result = UIGraphicsGetImageFromCurrentImageContext();
-
+    
     UIGraphicsEndImageContext();
     
     return result;
+
+    
+    //----------------------------用UIBezierPath的写法--------------------------------
+    //    UIGraphicsBeginImageContext(size);
+    //
+    //    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners:UIRectCornerAllCorners cornerRadii:CGSizeMake(radius, radius)];
+    //
+    //    CGContextAddPath(UIGraphicsGetCurrentContext(), path.CGPath);
+    //
+    //    CGContextClip(UIGraphicsGetCurrentContext());
+    //
+    //    [self drawInRect:rect];
+    //
+    //    CGContextDrawPath(UIGraphicsGetCurrentContext(), kCGPathStroke);
+    //    UIImage *output = UIGraphicsGetImageFromCurrentImageContext();
+    //    UIGraphicsEndImageContext();
+    
+    
+//--------------------------------Swift的写法------------------------------------
+//    func kt_drawRectWithRoundedCorner(radius radius: CGFloat,
+//                                      borderWidth: CGFloat,
+//                                      backgroundColor: UIColor,
+//                                      borderColor: UIColor) -> UIImage {
+//        UIGraphicsBeginImageContextWithOptions(sizeToFit, false, UIScreen.mainScreen().scale)
+//        let context = UIGraphicsGetCurrentContext()
+//        
+//        CGContextMoveToPoint(context, 开始位置);  // 开始坐标右边开始
+//        CGContextAddArcToPoint(context, x1, y1, x2, y2, radius);  // 这种类型的代码重复四次
+//        
+//        CGContextDrawPath(UIGraphicsGetCurrentContext(), .FillStroke)
+//        let output = UIGraphicsGetImageFromCurrentImageContext();
+//        UIGraphicsEndImageContext();
+//        return output
+//    }
 }
 
 
@@ -64,7 +120,7 @@
     //裁切
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    if (!self.radius) {//如果没有设置裁切半径，那么就默认为圆形
+    if (!self.radius){//如果没有设置裁切半径，那么就默认为圆形
         self.radius = self.cutRect.size.width > self.cutRect.size.height ?
         self.cutRect.size.width / 2 :
         self.cutRect.size.height / 2;
@@ -73,6 +129,8 @@
     [self contextRefWithcontext:context];
     
     [_image drawInRect:rect blendMode:kCGBlendModeLighten alpha:self.alpha];
+    
+    //其他的画图方法
     //CGContextDrawImage(context, self.cutRect, self.image.CGImage);
     //[_image drawAtPoint:CGPointMake(0, 0)];
     //[_image drawInRect: rect];
@@ -80,7 +138,7 @@
 }
 
 //MARK: - 在上下文中创建切圆路径并且裁切
-- (void)contextRefWithcontext: (CGContextRef)context {
+- (void)contextRefWithcontext:(CGContextRef)context {
     CGFloat
     minx = CGRectGetMinX(self.cutRect),//矩形中最小的x
     midx = CGRectGetMidX(self.cutRect),//矩形中最大x值的一半
@@ -147,7 +205,12 @@
 }
 
 //MARK: - 改变参数的方法
-- (void)imageChengeLeftTopRadiu:(CGFloat)leftTopRadiu andLeftBottomRadiu:(CGFloat)leftBottomRadiu andRightTopRadiu:(CGFloat)rightTopRadiu andRightBottomRadiu:(CGFloat)rightBottonRadiu andCutRect:(CGRect)cutRect andImageAlpha:(CGFloat)alpha{
+- (void)imageChengeLeftTopRadiu:(CGFloat)leftTopRadiu
+             andLeftBottomRadiu:(CGFloat)leftBottomRadiu
+               andRightTopRadiu:(CGFloat)rightTopRadiu
+            andRightBottomRadiu:(CGFloat)rightBottonRadiu
+                     andCutRect:(CGRect)cutRect
+                  andImageAlpha:(CGFloat)alpha{
     
     //赋值，不能用self.因为self.默认会调用setter方法（造成多次没必要的setNeedsDisplay）
     _leftTopRadiu = leftTopRadiu;
@@ -156,6 +219,7 @@
     _rightBottonRadiu = rightBottonRadiu;
     _cutRect = cutRect;
     //赋值并刷新
-    self.alpha = alpha;
+    _alpha = alpha;
+    [self setNeedsDisplay];
 }
 @end

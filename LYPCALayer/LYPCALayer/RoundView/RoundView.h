@@ -10,6 +10,11 @@
 
 @interface RoundView : UIView
 
+
+
+
+//-------------------初始化----------------------------------
+#pragma mark - 初始化
 /**
  *isCut     是否裁切,默认为NO；
  *radius    半径
@@ -23,10 +28,37 @@
  */
 - (instancetype) initWithIsCut: (BOOL) isCut andCutRadius: (CGFloat)radius andImage: (UIImage *)image;
 
-/**截图并且返回图片*/
-- (UIImage *)snapshotImage;
 
 
+
+
+
+
+
+//-------------------截图的相关数据---------------------------
+#pragma mark - 截图的方法
+/**
+ * 截图并且返回图片
+ * IsTransparent: 裁切部分是否透明（默认是NO：不透明）
+ * CGBlendMode: 绘图模式
+ * snapshotRect: 图片裁切的相对Rect（当不设置时，默认采用self.bouns数据）
+ *  imageAlpha: 图片透明度（设置小于等于1时，默认启用self.alpha的值）
+ */
+- (UIImage *)snapshotImageWithImageIsTransparent:(BOOL)isTransparent
+                                    andBlendMode: (CGBlendMode)blendMode
+                                 andSnapshotRect:(CGRect)snapshotRect
+                                   andImageAlpha:(CGFloat)imageAlpha;
+
+
+
+
+
+
+
+
+
+//-------------------裁切的相关数据---------------------------
+#pragma mark - 裁切的相关数据
 /**填充的image*/
 @property (nonatomic,strong) UIImage *image;
 
@@ -55,4 +87,5 @@
  */
 - (void) imageChengeLeftTopRadiu: (CGFloat)leftTopRadiu andLeftBottomRadiu: (CGFloat)leftBottomRadiu andRightTopRadiu: (CGFloat)rightTopRadiu andRightBottomRadiu: (CGFloat)rightBottomRadiu andCutRect: (CGRect) cutRect andImageAlpha: (CGFloat)alpha;
 
+- (void) drawRect1:(CGRect)rect;
 @end

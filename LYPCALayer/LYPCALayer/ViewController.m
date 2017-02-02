@@ -34,28 +34,44 @@
 }
 
 - (void)setupSubView {
+    UIImage *image = [UIImage imageNamed:@"1.1"];
+    
+    [self setupRoundViewWithImage:image];
+    
+    [self setupHappyNewYearlable];
+    
+    [self setupSnapshotImageButton];
+}
+
+
+//MAKR:RoundView
+- (void)setupRoundViewWithImage: (UIImage *)image {
     //创建RoundView
-    RoundView*view = [[RoundView alloc]initWithIsCut:YES andCutRadius:30 andImage:nil];
-    view.frame = CGRectMake(30, 100, 300, 310);
+    RoundView *roundView = [[RoundView alloc]initWithIsCut:NO andCutRadius:30 andImage:nil];
+    roundView.frame = CGRectMake(30, 100, 300, 310);
     
     //添加图片
-    UIImage *image = [UIImage imageNamed:@"1.1"];
-    view.image = image;
-    self.roundView = view;
-    [self.view addSubview:view];
+    roundView.image = image;
+    self.roundView = roundView;
+    [self.view addSubview:roundView];
     
     //添加手势
     [LYPGestureRecognizerTool pinchWithView:self.roundView andPinchBlock:nil];
     [LYPGestureRecognizerTool panWithView:self.roundView andPanBlock:nil];
-    [LYPGestureRecognizerTool rotationWithView:view andRotationBlock:nil];
+    [LYPGestureRecognizerTool rotationWithView:self.roundView andRotationBlock:nil];
+    [LYPGestureRecognizerTool longPressWithView:self.roundView andLongPressBlock:^{
+        NSLog(@"长按我干啥");
+    }];
     
     //设置切割的范围
-    [view imageChengeLeftTopRadiu:100 andLeftBottomRadiu:50 andRightTopRadiu:23 andRightBottomRadiu:150 andCutRect:CGRectMake(0, 0, 300, 300) andImageAlpha:.8];
+    [roundView imageChengeLeftTopRadiu:100 andLeftBottomRadiu:50 andRightTopRadiu:23 andRightBottomRadiu:150 andCutRect:CGRectMake(0, 0, 300, 300) andImageAlpha:.8];
     
     //添加截图View
     self.cutImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 100, 100)];
     [self.view addSubview: self.cutImageView];
-    
+}
+//MARK:HappyNewYearlable
+- (void)setupHappyNewYearlable {
     //2017新年快乐~
     UILabel *happyNewYearlable = [[UILabel alloc]init];
     happyNewYearlable.text = @"2017新年快乐~";
@@ -64,15 +80,25 @@
     happyNewYearlable.alpha = .8;
     happyNewYearlable.frame = CGRectMake(self.view.frame.size.width - 200, self.view.frame.size.height - 100, 250, 50);
     [self.view addSubview:happyNewYearlable];
-    
 }
 
+- (void)setupSnapshotImageButton {
+    UIButton *snapshotImageButton = [[UIButton alloc]initWithFrame:CGRectMake(10, self.view.frame.size.height - 80, 50, 50)];
+    [snapshotImageButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [snapshotImageButton setBackgroundColor:[UIColor colorWithWhite:.8 alpha:.2]];
+    [snapshotImageButton addTarget:self action:@selector(clickSnapshotImageButton:) forControlEvents:UIControlEventTouchUpInside];
+    [snapshotImageButton setTitle:@"截屏" forState:UIControlStateNormal];
+    [self.view addSubview:snapshotImageButton];
+}
+//MARK: - 截图并且显示
+- (void)clickSnapshotImageButton: (UIButton *)button {
+    self.cutImageView.image = [self.roundView snapshotImageWithImageIsTransparent:NO andBlendMode:0 andSnapshotRect:CGRectZero andImageAlpha:0];
+}
 
-//MARK: - 点击屏幕截图并且开始动画
+//MARK: - 点击屏幕开始动画
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     //额只是为了使用到懒加载
     self.displayLink;
-    self.cutImageView.image = [self.roundView snapshotImage];
 }
 
 
@@ -115,6 +141,5 @@
                                      andCutRect:CGRectMake(0, 0, self.roundView.frame.size.width + self.roundView.rightTopRadiu, self.roundView.frame.size.height + self.roundView.rightTopRadiu)
                                   andImageAlpha:self.roundView.alpha -= .01];
     }
-    
 }
 @end
