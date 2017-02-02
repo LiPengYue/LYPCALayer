@@ -47,7 +47,7 @@
 //MAKR:RoundView
 - (void)setupRoundViewWithImage: (UIImage *)image {
     //创建RoundView
-    RoundView *roundView = [[RoundView alloc]initWithIsCut:NO andCutRadius:30 andImage:nil];
+    RoundView *roundView = [[RoundView alloc]initWithIsCut:YES andCutRadius:30 andImage:nil];
     roundView.frame = CGRectMake(30, 100, 300, 310);
     
     //添加图片
