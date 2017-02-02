@@ -14,6 +14,21 @@
 @property (nonatomic,assign) BOOL isSupportMoreGesture;
 
 /**
+ * 传入View 给view添加捏合手势
+ * view：            手势将被添加到这个view上
+ * isSupportMoreGesture 表示是否支持多手势
+ * pinchiBlock：     点击事件的回调
+ * isGestureRecognizerStateEnded： 手势是否结束
+ * pinch：           手势对象
+ */
++ (void)pinchWithView: (UIView *)view
+        andPinchBlock: (void(^)
+                        (BOOL isGestureRecognizerStateEnded,
+                         UIPinchGestureRecognizer *pinch)
+                        )pinchiBlock;
+
+
+/**
  * 传入view，给View，添加点击手势
  * view：            手势将被添加到这个view上
  * numberOfTouches： 设置触控对象的个数（几个手指）
