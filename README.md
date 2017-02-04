@@ -17,8 +17,14 @@ static id _instancetype;
     return _instancetype;
 }
 ```
+2 . 统一设置手势是否支持多手势操作
+```
+@property (nonatomic,assign) BOOL isSupportMoreGesture;
+```
 
-2 . 每个手势的添加都是利用类方法，向外部暴露了一个UIView接口
+
+3 . 每个手势的添加都是利用类方法，向外部暴露了一个UIView接口
+.h
 ```
 //
 /**
@@ -62,11 +68,10 @@ static id _instancetype;
  */
 +(void)swipeWithView: (UIView *)view andSwipeGrestureDirection: (UISwipeGestureRecognizerDirection)direction andSwipeBlock: (void(^)(UISwipeGestureRecognizer *swipe))swipeBlock;
 ````
-3 . 手势事件的回调都是利用了block，如果外部没有对block进行赋值，那么将执行相应的手势事件相应
+4 . 手势事件的回调都是利用了block，如果外部没有对block进行赋值，那么将执行相应的手势事件相应
 .  每个手势事件都对应着声明了一个纯私有block属性，从而保证了事件的传递
+.m
 ````
-#import "LYPGestureRecognizerTool.h"
-@interface LYPGestureRecognizerTool() <UIGestureRecognizerDelegate>
 //tap（点击手势）回调的block
 @property (nonatomic,copy) void(^tapBlock)(UITapGestureRecognizer *tap);
 //pinch（捏合手势）回调的block
@@ -79,9 +84,8 @@ static id _instancetype;
 @property (nonatomic,copy) void(^rotationBlock)(CGFloat rotation,UIRotationGestureRecognizer *rotationGesture);
 //swipe (清扫手势) 回调的block
 @property (nonatomic,copy) void(^swipeBlock)(UISwipeGestureRecognizer *swipe);
-@end
 ```
-4 . 默认手势事件的相应举例： 
+5 . 默认手势事件的相应举例： 
 1. pinch的创建
  1. 首先创建（获取）了一个手势工具类，然后在设置代理，（这里的代理设置主要是因为解决手势冲突）
  2. 给View添加手势
@@ -131,25 +135,27 @@ static id _instancetype;
 1.提供两个构造方法（类构造方法，对象构造方法）
 ```
 //MARK: - 实例化方法
-+(instancetype) roundViewWithIsCut: (BOOL)isCut andCutRadius: (CGFloat)radius andImage: (UIImage *)image{
-    return [[self alloc]initWithIsCut:isCut andCutRadius:radius andImage:image];
-}
--(instancetype) initWithIsCut: (BOOL)isCut andCutRadius: (CGFloat)radius andImage: (UIImage *)image {
-    if (self = [super init]) {
-        //先走这句话，是因为现在的isCut是NO，不会切圆，如果先设置isCut那么radius是nil那么就会使View被切成圆形
-        self.radius = radius;
-        self.isCut = isCut;
-        self.image = image;
-    }
-    return self;
-}
+#pragma mark - 初始化
+/**
+ *isCut     是否裁切,默认为NO；
+ *radius    半径
+ */
++ (instancetype) roundViewWithIsCut: (BOOL) isCut andCutRadius: (CGFloat)radius andImage: (UIImage *)image;
+
+/**
+ *isCut     是否裁切,默认为NO；
+ *radius    半径
+ *image     view中的image内容
+ */
+- (instancetype) initWithIsCut: (BOOL) isCut andCutRadius: (CGFloat)radius andImage: (UIImage *)image;
 ```
 
-2.传入简单的几个属性参数，并对自己的属性赋值，而每个属性赋值的时候都会调用 [self setNeedsDisplay]; 从而重绘图形
+2.view的裁切
+传入简单的几个属性参数，并对自己的属性赋值，而每个属性赋值的时候都会调用 [self setNeedsDisplay]; 从而重绘图形
 
 1. 属性：
 ```
-//
+#pragma mark - 裁切的相关数据
 /**填充的image*/
 @property (nonatomic,strong) UIImage *image;
 /**裁切后的image*/
@@ -167,16 +173,31 @@ static id _instancetype;
 @property (nonatomic,assign) CGFloat rightBottonRadiu;
 /**图片的透明度*/
 @property (nonatomic,assign) CGFloat alpha;
-```
-2. 方法
-```
-//
-/**截图并且返回图片*/
--(UIImage *)snapshotImage;
 /**
  *  综合的改变渲染参数（如果改变多个参数后渲染，建议用此方法）
  */
--(void) imageChengeLeftTopRadiu: (CGFloat)leftTopRadiu andLeftBottomRadiu: (CGFloat)leftBottomRadiu andRightTopRadiu: (CGFloat)rightTopRadiu andRightBottomRadiu: (CGFloat)rightBottomRadiu andCutRect: (CGRect) cutRect andImageAlpha: (CGFloat)alpha;
+-(void) imageChengeLeftTopRadiu: (CGFloat)leftTopRadiu
+              andLeftBottomRadiu: (CGFloat)leftBottomRadiu
+                andRightTopRadiu: (CGFloat)rightTopRadiu
+             andRightBottomRadiu: (CGFloat)rightBottomRadiu
+                      andCutRect: (CGRect) cutRect
+                   andImageAlpha: (CGFloat)alpha;
+```
+2. image的截图并裁切方法
+```
+//
+/**截图并且返回图片*/
+/**
+ * 截图并且返回图片
+ * IsTransparent: 裁切部分是否透明（默认是NO：不透明）
+ * CGBlendMode: 绘图模式
+ * snapshotRect: 图片裁切的相对Rect（当不设置时，默认采用self.bouns数据）
+ *  imageAlpha: 图片透明度（设置小于等于1时，默认启用self.alpha的值）
+ */
+-(UIImage *)snapshotImageWithImageIsTransparent:(BOOL)isTransparent
+                                    andBlendMode: (CGBlendMode)blendMode
+                                 andSnapshotRect:(CGRect)snapshotRect
+                                   andImageAlpha:(CGFloat)imageAlpha;
 ```
 3. 这个方法可以好好看看，规定了上下文中创建切圆的路径并且进行裁切
 ```
@@ -206,6 +227,6 @@ static id _instancetype;
 利用了displayLink 计时器
 还有别忘了调用
 `[displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes]; `把它加入到Runloop的common标记的modes中
-对于[(Runloop的学习总结请看这里)]()
+对于[(Runloop的学习总结请看这里)](http://www.jianshu.com/p/b80a8d4484e6)
 
-[好了暂时就这么多了，一切请看github源码](https://github.com/LiPengYue/LYPCALayer)
+[好了暂时就这么多了，一切请下载github源码]
